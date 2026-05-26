@@ -94,3 +94,53 @@ _Good luck, Agent_.
 
 ---
 
+## Assignment Directions
+
+### 🛑 General Constraints
+
+- Use only the content learned in Unit 1.2 and 1.3.
+- No frameworks, no external sanitization libraries.
+- Use safe DOM updates: do not use innerHTML for untrusted strings.
+
+
+### How to Run the Environment
+- Install dependencies
+> npm install
+
+- Run the code
+> open in the file public/index.hmtml in the browser
+
+- Run all tests (check if your changes are correct)
+> npm test
+
+- Run specific test
+> npm test <name_of_test>
+
+
+
+---
+
+---
+
+## 📊 Evaluation Rubric: CYSE 411 - Assignment 1 (Max: 100 Points)
+
+| Component / Mission | Security & Technical Focus | Incomplete / Insufficient (0% to 35%) | Intermediate Achievement (36% to 75%) | Excellent / Secure (76% to 100%) | Max Points |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| **Mission 1**<br>`sanitizeUsername` | **Input Sanitization & Allowlist Controls** | Returns hardcoded/static values or relies on an endless chain of manual `.replace()` statements to guess bad characters. | Clears out most unsafe characters and respects the maximum string length, but **fails to use Regular Expressions**, triggering a strict inspection failure. | Leverages a resilient character allowlist Regular Expression (`[^A-Za-z0-9_-]`), maps failures to `_`, enforces a strict 20-character limit, and passes 100% of tests. | **15 pts** |
+| **Mission 2**<br>`renderNotifications` | **Structural DOM Protection against XSS** | Fails to clear out historical node sequences (`<li>` tags stack up forever) or appends untrusted content raw into the browser DOM. | Successfully purges the old notification listing and creates new list structures, but breaks when handling empty arrays or risks injection flaws. | Thoroughly resets the parent wrapper node (`listEl.innerHTML = ""`) and utilizes **strictly `textContent`** to populate the dynamically built `<li>` tags safely. | **15 pts** |
+| **Mission 3**<br>`parseProfileJson` | **Schema Validation & Denial of Service (DoS) Hardening** | Attempts to process broken or manipulated json payloads directly, letting parsing exceptions crash the client-side system process. | Wraps the execution block within an explicit `try/catch` safety net, but entirely omits property data type checking or mistakenly permits unsafe data configurations (e.g., admitting `"root"` as a valid role). | Implements robust `try/catch` exception isolation alongside rigid type schema checking: `displayName` (string), `role` (strictly `"user"` or `"admin"`), and `notifications` (Array). Drops bad states cleanly to `null`. | **15 pts** |
+| **Mission 4**<br>`fetchUserProfile` | **Asynchronous Data Pipelines & Connection Validation** | Fails to write proper non-blocking asynchronous loops or bypasses standard promise resolution mechanisms. | Seamlessly deploys `async/await` runtime loops to issue a client-side `fetch()` request, but completely ignores network transaction flags (`response.ok`) or attempts extraction errors. | Smoothly orchestrates asynchronous flows using `fetch + await`, safely validates the transactional health via `response.ok`, extracts network data to raw text stream (`.text()`), and pipes the text context directly into `parseProfileJson`. | **15 pts** |
+| **Mission 5 & 6**<br>`Storage` (Save & Load) | **Client-Side Data Leakage & State Management Privacy** | Fails to commit user settings entirely or serializes raw, highly credentialed objects into local storage without performing selective structural data filters. | Successfully records and deserializes standard object properties using JSON serialization methods, but leaks non-static parameters (like notifications arrays) or crashes upon processing tampered states. | **Write Routine:** Reconstructs a strict subset containing *exclusively* non-sensitive details `{ displayName, role }`. <br><br>**Read Routine:** Uses the dedicated global `STORAGE_KEY` and falls back cleanly to `null` if database records are empty or corrupt. | **25 pts** |
+| **Mission 7**<br>`computeAccessStatus` | **Defensive Engineering & Fail-Closed Access Modeling** | Misses role verification checks entirely, experiences errors when analyzing null entities, or responds with strings that break structural definitions. | Handles happy path operations flawlessly (validates standard admin role variables correctly), but experiences operational crashes when processing incomplete, corrupted, or uninitialized user state inputs. | Comprehensively ensures both the incoming root object and its nested `.role` property exist, enforces strict identity checks via `=== "admin"` to yield `"GRANTED"`, and securely handles all edge cases with a **Fail-Closed fallback default** of `"DENIED"`. | **15 pts** |
+
+---
+
+## 🛑 Penalty Ledger (Subtractive Deductions)
+
+| System / Policy Violation | Score Impact | Core Security Contextual Rationale |
+| :--- | :--- | :--- |
+| **Use of Frameworks or Third-Party Sanitization Engines** | **-100 Points (Automatic Zero)** | Violates the primary architectural boundary of the task, requiring exclusive dependency on raw Vanilla JavaScript syntax. |
+| **Using `innerHTML` / `outerHTML` for dynamic, untrusted string variables** | **-30 Points** | Actively opens the software application portal up to disastrous structural Cross-Site Scripting (XSS) client-side attacks. |
+| **Syntax errors that completely obstruct the `npm test` execution environment** | **-20 Points** | Disables automated test suites, blocking the local simulation pipeline and autograder framework checks entirely. |
+
+---

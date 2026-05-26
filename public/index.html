@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Secure Status Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    .row { margin: 10px 0; }
+    .box { border: 1px solid #ccc; padding: 12px; border-radius: 6px; max-width: 720px; }
+    .status { font-weight: bold; }
+    .ok { color: green; }
+    .bad { color: darkred; }
+    code { background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <h1>Secure Status Portal</h1>
+
+  <div class="box">
+    <div class="row">
+      <label>
+        Username:
+        <input id="usernameInput" placeholder="e.g., alice" />
+      </label>
+      <button id="loginBtn">Log In</button>
+      <button id="logoutBtn">Log Out</button>
+    </div>
+
+    <div class="row">
+      <button id="loadProfileBtn">Load Profile (fetch)</button>
+      <button id="loadFromStorageBtn">Load From Storage</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div>Display Name: <span id="displayName">UNDEFINED</span></div>
+      <div>Role: <span id="role">UNDEFINED</span></div>
+      <div>Access Status: <span id="accessStatus" class="status">UNDEFINED</span></div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div>Notifications:</div>
+      <ul id="notifications"></ul>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <div><b>Debug:</b></div>
+      <pre id="debug"></pre>
+    </div>
+  </div>
+
+  <!-- Important: defer ensures DOM exists before JS runs -->
+  <script defer src="../src/app.js"></script>
+</body>
+</html>
